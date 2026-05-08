@@ -1,29 +1,29 @@
-# Address PR Comments
+# 处理 PR 评论
 
-Review and address all comments on the current branch's PR.
+审查并处理当前分支 PR 上的所有评论。
 
-## Steps
+## 步骤
 
-1. Get the current branch name and find the associated PR:
+1. 获取当前分支名称并找到关联的 PR：
    ```bash
    gh pr view --json number,title,body
    ```
 
-2. Understand the PR context:
-   - Get the full diff: `git diff origin/main...HEAD`
-   - Read the changed files to understand what the PR is doing
-   - Read related files if needed to understand the broader context
-   - Understand the intent and spirit of the changes, not just the code
+2. 理解 PR 上下文：
+   - 获取完整差异：`git diff origin/main...HEAD`
+   - 阅读变更的文件，理解 PR 的目的
+   - 如需更广泛的上下文，阅读相关文件
+   - 理解变更的意图和精神，而不仅仅是代码本身
 
-3. Fetch all PR comments:
-   - Inline comments: `gh api repos/{owner}/{repo}/pulls/{pr_number}/comments`
-   - General comments: `gh pr view {pr_number} --json comments,reviews`
+3. 获取所有 PR 评论：
+   - 行内评论：`gh api repos/{owner}/{repo}/pulls/{pr_number}/comments`
+   - 通用评论：`gh pr view {pr_number} --json comments,reviews`
 
-4. Present a summary of all comments with your recommendation for each (apply, skip, or respond). Ignore bot noise (release automation, CI status, etc.).
+4. 展示所有评论的摘要，并为每条评论给出你的建议（采纳、跳过或回复）。忽略机器人噪音（发布自动化、CI 状态等）。
 
-5. **Wait for my approval** before proceeding.
+5. **等待我的批准**后再继续。
 
-6. After approval:
-   - Apply code changes and commit
-   - Reply to comments that were addressed or intentionally skipped
-   - Push commits
+6. 获得批准后：
+   - 应用代码变更并提交
+   - 回复已处理或有意跳过的评论
+   - 推送提交

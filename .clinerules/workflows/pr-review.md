@@ -1,33 +1,33 @@
-You have access to the `gh` terminal command. I already authenticated it for you. Please review it to use the PR that I asked you to review. You're already in the `cline` repo.
+你可以使用 `gh` 终端命令。我已经为你完成了认证。请使用它来审查我让你审查的 PR。你已经在 `cline` 仓库中了。
 
 <detailed_sequence_of_steps>
-# GitHub PR Review Process - Detailed Sequence of Steps
+# GitHub PR 审查流程 - 详细步骤序列
 
-## 1. Gather PR Information
-1. Get the PR title, description, and comments:
+## 1. 收集 PR 信息
+1. 获取 PR 标题、描述和评论：
    ```bash
    gh pr view <PR-number> --json title,body,comments
    ```
 
-2. Get the full diff of the PR:
+2. 获取 PR 的完整差异：
    ```bash
    gh pr diff <PR-number>
    ```
 
-## 2. Understand the Context
-1. Identify which files were modified in the PR:
+## 2. 理解上下文
+1. 确定 PR 中修改了哪些文件：
    ```bash
    gh pr view <PR-number> --json files
    ```
 
-2. Examine the original files in the main branch to understand the context:
+2. 检查 main 分支中的原始文件以理解上下文：
    ```xml
    <read_file>
    <path>path/to/file</path>
    </read_file>
    ```
 
-3. For specific sections of a file, you can use search_files:
+3. 对于文件的特定部分，可以使用 search_files：
    ```xml
    <search_files>
    <path>path/to/directory</path>
@@ -36,58 +36,58 @@ You have access to the `gh` terminal command. I already authenticated it for you
    </search_files>
    ```
 
-## 3. Analyze the Changes
-1. For each modified file, understand:
-   - What was changed
-   - Why it was changed (based on PR description)
-   - How it affects the codebase
-   - Potential side effects
+## 3. 分析变更
+1. 对每个修改的文件，理解：
+   - 修改了什么
+   - 为什么修改（根据 PR 描述）
+   - 如何影响代码库
+   - 潜在的副作用
 
-2. Look for:
-   - Code quality issues
-   - Potential bugs
-   - Performance implications
-   - Security concerns
-   - Test coverage
+2. 检查：
+   - 代码质量问题
+   - 潜在 bug
+   - 性能影响
+   - 安全隐患
+   - 测试覆盖率
 
-## 4. Ask for User Confirmation
-1. Before making a decision, ask the user if you should approve the PR, providing your assessment and justification:
+## 4. 询问用户确认
+1. 在做出决定之前，询问用户是否应该批准 PR，同时提供你的评估和理由：
    ```xml
    <ask_followup_question>
-   <question>Based on my review of PR #<PR-number>, I recommend [approving/requesting changes]. Here's my justification:
+   <question>根据我对 PR #<PR-number> 的审查，我建议[批准/请求修改]。以下是我的理由：
    
-   [Detailed justification with key points about the PR quality, implementation, and any concerns]
+   [关于 PR 质量、实现和任何顾虑的详细理由]
    
-   Would you like me to proceed with this recommendation?</question>
-   <options>["Yes, approve the PR", "Yes, request changes", "No, I'd like to discuss further"]</options>
+   你希望我按照这个建议继续吗？</question>
+   <options>["是的，批准 PR", "是的，请求修改", "不，我想进一步讨论"]</options>
    </ask_followup_question>
    ```
 
-## 5. Ask if User Wants a Comment Drafted
-1. After the user decides on approval/rejection, ask if they would like a comment drafted:
+## 5. 询问用户是否需要起草评论
+1. 在用户决定批准/拒绝后，询问是否需要起草评论：
    ```xml
    <ask_followup_question>
-   <question>Would you like me to draft a comment for this PR that you can copy and paste?</question>
-   <options>["Yes, please draft a comment", "No, I'll handle the comment myself"]</options>
+   <question>你需要我为这个 PR 起草一条评论供你复制粘贴吗？</question>
+   <options>["是的，请起草评论", "不用，我自己处理评论"]</options>
    </ask_followup_question>
    ```
 
-2. If the user wants a comment drafted, provide a well-structured comment they can copy:
+2. 如果用户需要起草评论，提供一条结构良好的评论供其复制：
    ```
    Thank you for this PR! Here's my assessment:
 
-   [Detailed assessment with key points about the PR quality, implementation, and any suggestions]
+   [关于 PR 质量、实现和建议的详细评估]
 
-   [Include specific feedback on code quality, functionality, and testing]
+   [包括对代码质量、功能和测试的具体反馈]
    ```
 
-## 6. Make a Decision
-1. Approve the PR if it meets quality standards:
+## 6. 做出决定
+1. 如果符合质量标准，批准 PR：
    ```bash
-   # For single-line comments:
+   # 单行评论：
    gh pr review <PR-number> --approve --body "Your approval message"
    
-   # For multi-line comments with proper whitespace formatting:
+   # 多行评论，保持正确的空白格式：
    cat << EOF | gh pr review <PR-number> --approve --body-file -
    Thanks @username for this PR! The implementation looks good.
 
@@ -97,12 +97,12 @@ You have access to the `gh` terminal command. I already authenticated it for you
    EOF
    ```
 
-2. Request changes if improvements are needed:
+2. 如果需要改进，请求修改：
    ```bash
-   # For single-line comments:
+   # 单行评论：
    gh pr review <PR-number> --request-changes --body "Your feedback message"
    
-   # For multi-line comments with proper whitespace formatting:
+   # 多行评论，保持正确的空白格式：
    cat << EOF | gh pr review <PR-number> --request-changes --body-file -
    Thanks @username for this PR!
 
@@ -115,38 +115,38 @@ You have access to the `gh` terminal command. I already authenticated it for you
    EOF
    ```
 
-   Note: The `cat << EOF | ... --body-file -` approach preserves all whitespace and formatting without requiring temporary files. The `-` parameter tells the command to read from standard input.
+   注意：`cat << EOF | ... --body-file -` 方法可以保留所有空白和格式，无需创建临时文件。`-` 参数告诉命令从标准输入读取。
 </detailed_sequence_of_steps>
 
 <example_review_process>
-# Example PR Review Process
+# PR 审查流程示例
 
-Let's walk through a real example of reviewing PR #3627 which fixes the thinking mode calculation for Claude 3.7 models.
+让我们通过一个真实的例子来演示审查 PR #3627 的过程，该 PR 修复了 Claude 3.7 模型的思考模式计算。
 
-## Step 1: Gather PR Information
+## 步骤 1：收集 PR 信息
 
 ```bash
-# Get PR details
+# 获取 PR 详情
 gh pr view 3627 --json title,body,comments
 
-# Get the full diff
+# 获取完整差异
 gh pr diff 3627
 ```
 
-## Step 2: Understand the Context
+## 步骤 2：理解上下文
 
 ```xml
-# Examine the original files to understand what's being changed
+# 检查原始文件以理解正在修改的内容
 <read_file>
 <path>src/shared/api.ts</path>
 </read_file>
 
-# Look at the ThinkingBudgetSlider component implementation
+# 查看 ThinkingBudgetSlider 组件实现
 <read_file>
 <path>webview-ui/src/components/settings/ThinkingBudgetSlider.tsx</path>
 </read_file>
 
-# Check how thinking mode is currently handled in API providers
+# 检查 API 提供者中思考模式的当前处理方式
 <search_files>
 <path>src/api/providers</path>
 <regex>reasoningOn</regex>
@@ -154,52 +154,52 @@ gh pr diff 3627
 </search_files>
 ```
 
-## Step 3: Analyze the Changes
+## 步骤 3：分析变更
 
-From the PR information and code examination, we can see that:
+从 PR 信息和代码检查中，我们可以看到：
 
-1. The PR fixes an issue with the thinking mode budget calculation for Claude 3.7 models
-2. Currently, the thinking budget is incorrectly calculated as 80% of maxTokens (8192), resulting in 6553 tokens
-3. Claude 3.7 actually supports a much larger thinking budget (up to 64000 tokens)
-4. The PR adds a `thinkingConfig` property with `maxBudget: 64000` to model definitions
-5. It updates API handlers to use this value when reasoning mode is enabled
-6. It enhances the slider component to calculate max values based on model-specific percentages
-7. Comprehensive tests were added to verify the calculations
+1. 该 PR 修复了 Claude 3.7 模型的思考模式预算计算问题
+2. 目前思考预算被错误地计算为 maxTokens (8192) 的 80%，结果为 6553 个 token
+3. Claude 3.7 实际上支持更大的思考预算（最高 64000 个 token）
+4. 该 PR 在模型定义中添加了 `thinkingConfig` 属性，包含 `maxBudget: 64000`
+5. 更新了 API 处理器，在推理模式启用时使用此值
+6. 增强了滑块组件，基于模型特定的百分比计算最大值
+7. 添加了全面的测试来验证计算
 
-## Step 4: Ask for User Confirmation
-
-```xml
-<ask_followup_question>
-<question>Based on my review of PR #3627, I recommend approving this PR. Here's my justification:
-
-1. The PR correctly fixes the thinking mode budget calculation for Claude 3.7 models
-2. It properly implements the thinkingConfig.maxBudget property (64000) for Claude 3.7 models
-3. It applies the appropriate percentage (50%) for the slider calculation
-4. The changes are well-tested with comprehensive unit tests
-5. The implementation is clean and follows the project's coding standards
-6. The PR includes helpful screenshots demonstrating the fix
-
-Would you like me to proceed with approving this PR?</question>
-<options>["Yes, approve the PR", "No, I'd like to discuss further", "Let me review it myself first"]</options>
-</ask_followup_question>
-```
-
-## Step 5: Ask if User Wants a Comment Drafted
+## 步骤 4：询问用户确认
 
 ```xml
 <ask_followup_question>
-<question>Would you like me to draft a comment for this PR that you can copy and paste?</question>
-<options>["Yes, please draft a comment", "No, I'll handle the comment myself"]</options>
+<question>根据我对 PR #3627 的审查，我建议批准此 PR。以下是我的理由：
+
+1. 该 PR 正确修复了 Claude 3.7 模型的思考模式预算计算
+2. 正确实现了 thinkingConfig.maxBudget 属性（64000）
+3. 滑块计算使用了合适的百分比（50%）
+4. 变更经过全面的单元测试
+5. 实现简洁，遵循项目编码规范
+6. PR 包含了展示修复效果的截图
+
+你希望我继续批准这个 PR 吗？</question>
+<options>["是的，批准 PR", "不，我想进一步讨论", "让我先自己看看"]</options>
 </ask_followup_question>
 ```
 
-## Step 6: Make a Decision
+## 步骤 5：询问用户是否需要起草评论
+
+```xml
+<ask_followup_question>
+<question>你需要我为这个 PR 起草一条评论供你复制粘贴吗？</question>
+<options>["是的，请起草评论", "不用，我自己处理评论"]</options>
+</ask_followup_question>
+```
+
+## 步骤 6：做出决定
 
 ```bash
-# Option 1: Simple one-line comment
+# 方式 1：简单的单行评论
 gh pr review 3627 --approve --body "This PR looks good! It correctly fixes the thinking mode budget calculation for Claude 3.7 models."
 
-# Option 2: Multi-line comment with proper whitespace formatting
+# 方式 2：多行评论，保持正确的空白格式
 cat << EOF | gh pr review 3627 --approve --body-file -
 This PR looks good! It correctly fixes the thinking mode budget calculation for Claude 3.7 models.
 
@@ -215,44 +215,44 @@ EOF
 </example_review_process>
 
 <common_gh_commands>
-# Common GitHub CLI Commands for PR Review
+# PR 审查常用 GitHub CLI 命令
 
-## Basic PR Commands
+## 基本 PR 命令
 ```bash
-# Get current PR number
+# 获取当前 PR 编号
 gh pr view --json number -q .number
 
-# List open PRs
+# 列出打开的 PR
 gh pr list
 
-# View a specific PR
+# 查看特定 PR
 gh pr view <PR-number>
 
-# View PR with specific fields
+# 查看 PR 的特定字段
 gh pr view <PR-number> --json title,body,comments,files,commits
 
-# Check PR status
+# 检查 PR 状态
 gh pr status
 ```
 
-## Diff and File Commands
+## 差异和文件命令
 ```bash
-# Get the full diff of a PR
+# 获取 PR 的完整差异
 gh pr diff <PR-number>
 
-# List files changed in a PR
+# 列出 PR 中变更的文件
 gh pr view <PR-number> --json files
 
-# Check out a PR locally
+# 在本地检出 PR
 gh pr checkout <PR-number>
 ```
 
-## Review Commands
+## 审查命令
 ```bash
-# Approve a PR (single-line comment)
+# 批准 PR（单行评论）
 gh pr review <PR-number> --approve --body "Your approval message"
 
-# Approve a PR (multi-line comment with proper whitespace)
+# 批准 PR（多行评论，保持正确的空白格式）
 cat << EOF | gh pr review <PR-number> --approve --body-file -
 Your multi-line
 approval message with
@@ -260,10 +260,10 @@ approval message with
 proper whitespace formatting
 EOF
 
-# Request changes on a PR (single-line comment)
+# 请求修改 PR（单行评论）
 gh pr review <PR-number> --request-changes --body "Your feedback message"
 
-# Request changes on a PR (multi-line comment with proper whitespace)
+# 请求修改 PR（多行评论，保持正确的空白格式）
 cat << EOF | gh pr review <PR-number> --request-changes --body-file -
 Your multi-line
 change request with
@@ -271,10 +271,10 @@ change request with
 proper whitespace formatting
 EOF
 
-# Add a comment review (without approval/rejection)
+# 添加评论审查（不批准也不拒绝）
 gh pr review <PR-number> --comment --body "Your comment message"
 
-# Add a comment review with proper whitespace
+# 添加多行评论审查
 cat << EOF | gh pr review <PR-number> --comment --body-file -
 Your multi-line
 comment with
@@ -283,27 +283,27 @@ proper whitespace formatting
 EOF
 ```
 
-## Additional Commands
+## 其他命令
 ```bash
-# View PR checks status
+# 查看 PR 检查状态
 gh pr checks <PR-number>
 
-# View PR commits
+# 查看 PR 提交
 gh pr view <PR-number> --json commits
 
-# Merge a PR (if you have permission)
+# 合并 PR（如果你有权限）
 gh pr merge <PR-number> --merge
 ```
 </common_gh_commands>
 
 <general_guidelines_for_commenting>
-When reviewing a PR, please talk normally and like a friendly reviwer. You should keep it short, and start out by thanking the author of the pr and @ mentioning them. 
+审查 PR 时，请用正常、友好的审查者语气交流。保持简短，先感谢 PR 作者并 @ 提及他们。
 
-Whether or not you approve the PR, you should then give a quick summary of the changes without being too verbose or definitive, staying humble like that this is your understanding of the changes. Kind of how I'm talking to you right now.
+无论你是否批准 PR，都应该给出变更的简要总结，不要过于冗长或武断，保持谦逊的态度，表明这是你对变更的理解。就像我现在跟你说话的方式一样。
 
-If you have any suggestions, or things that need to be changed, request changes instead of approving the PR.
+如果你有任何建议或需要修改的地方，请求修改而不是批准 PR。
 
-Leaving inline comments in code is good, but only do so if you have something specific to say about the code. And make sure you leave those comments first, and then request changes in the PR with a short comment explaining the overall theme of what you're asking them to change.
+在代码中留下行内评论是好的，但只有在你对代码有具体的意见时才这样做。确保先留下这些评论，然后在 PR 中请求修改，并附上简短的评论说明你要求他们修改的整体主题。
 </general_guidelines_for_commenting>
 
 <example_comments_that_i_have_written_before>
