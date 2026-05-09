@@ -1,5 +1,12 @@
 import { DefaultAzureCredential, getBearerTokenProvider } from "@azure/identity"
-import { azureOpenAiDefaultApiVersion, ModelInfo, OpenAiCompatibleModelInfo, openAiModelInfoSaneDefaults } from "@shared/api"
+import {
+	azureOpenAiDefaultApiVersion,
+	ModelInfo,
+	MoonshotModelId,
+	moonshotModels,
+	OpenAiCompatibleModelInfo,
+	openAiModelInfoSaneDefaults,
+} from "@shared/api"
 import { normalizeOpenaiReasoningEffort } from "@shared/storage/types"
 import OpenAI, { AzureOpenAI } from "openai"
 import type { ChatCompletionReasoningEffort, ChatCompletionTool } from "openai/resources/chat/completions"
@@ -97,17 +104,28 @@ export class OpenAiHandler implements ApiHandler {
 	async *createMessage(systemPrompt: string, messages: ClineStorageMessage[], tools?: ChatCompletionTool[]): ApiStream {
 		const client = this.ensureClient()
 		const modelId = this.options.openAiModelId ?? ""
+		const baseUrl = this.options.openAiBaseUrl?.toLowerCase() ?? ""
 		const isDeepseekReasoner = modelId.includes("deepseek-reasoner")
 		const isR1FormatRequired = this.options.openAiModelInfo?.isR1FormatRequired ?? false
 		const isReasoningModelFamily =
 			["o1", "o3", "o4", "gpt-5"].some((prefix) => modelId.includes(prefix)) && !modelId.includes("chat")
+
+		// When users connect to Moonshot via OpenAI Compatible, some Kimi models
+		// (e.g. kimi-k2.6) reject any temperature other than the one the model enforces.
+		// Resolve the enforced temperature from moonshotModels metadata when applicable.
+		const moonshotEnforcedTemperature: number | undefined =
+			baseUrl.includes("moonshot") && modelId in moonshotModels
+				? moonshotModels[modelId as MoonshotModelId].temperature
+				: undefined
 
 		let openAiMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
 			{ role: "system", content: systemPrompt },
 			...convertToOpenAiMessages(messages),
 		]
 		let temperature: number | undefined
-		if (this.options.openAiModelInfo?.temperature !== undefined) {
+		if (moonshotEnforcedTemperature !== undefined) {
+			temperature = moonshotEnforcedTemperature
+		} else if (this.options.openAiModelInfo?.temperature !== undefined) {
 			const tempValue = Number(this.options.openAiModelInfo.temperature)
 			temperature = tempValue === 0 ? undefined : tempValue
 		} else {
